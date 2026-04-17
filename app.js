@@ -1077,6 +1077,17 @@ function initCrisprLab() {
 }
 
 // ========== INTRO ==========
+// Scroll gently to CRISPR lab top — prevents mobile jump
+function scrollToCrispr() {
+  const el = document.getElementById('crisprLab');
+  if (!el) return;
+  // Only scroll if the lab is not already visible at top
+  const rect = el.getBoundingClientRect();
+  if (rect.top < -10 || rect.top > window.innerHeight * 0.4) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 function renderCrisprIntro() {
   clearCrisprTimer();
   document.getElementById('crisprLab').innerHTML = `
@@ -1116,6 +1127,7 @@ function renderCrisprIntro() {
         <button class="crispr-start-btn" onclick="startCrispr(0)">✅ Entendí, entrar al laboratorio →</button>
       </div>
     </div>`;
+  scrollToCrispr();
 }
 
 // ========== START — boot sequence ==========
@@ -1138,7 +1150,7 @@ function startCrispr(idx) {
 
   animateCas9Log(CAS9_MSGS.boot, 'cas9Log', () => {
     SFX.lock();
-    setTimeout(() => renderStep1(), 400);
+    setTimeout(() => { renderStep1(); scrollToCrispr(); }, 400);
   });
 }
 
@@ -1199,7 +1211,7 @@ function step1Click() {
   crisprState.score.precision += 1;
   SFX.lock();
   showToast('🎯 Objetivo localizado. Cas9 en camino…');
-  setTimeout(() => renderStep2(), 300);
+  setTimeout(() => { renderStep2(); scrollToCrispr(); }, 300);
 }
 
 function showHint() {
@@ -1281,7 +1293,7 @@ function step2Cut() {
     bases[c.mutantPos].classList.add('base-cutting');
     bases[c.mutantPos].textContent = '⚡';
   }
-  setTimeout(() => renderStep3(), 800);
+  setTimeout(() => { renderStep3(); scrollToCrispr(); }, 800);
 }
 
 // ========== STEP 3: cut visible + base keyboard ==========
@@ -1353,7 +1365,7 @@ function insertBase(base) {
     else crisprState.score.precision = 40;
 
     animateCas9Log(CAS9_MSGS.repair, 'cas9Log', null);
-    setTimeout(() => showSuccessScreen(), 1400);
+    setTimeout(() => { showSuccessScreen(); scrollToCrispr(); }, 1400);
 
   } else {
     // ❌ WRONG

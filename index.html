@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BioUniverse — La biotecnología para todos</title>
+  <meta name="description" content="Plataforma de divulgación científica en biotecnología. Explorá la ciencia que cambia el mundo, a tu nivel."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="mode-explorer">
+
+<!-- ========== MODE SELECTOR (first visit) ========== -->
+<div id="modeGate" class="mode-gate">
+  <div class="mode-gate-inner">
+    <div class="mode-gate-logo">Bio<span>Universe</span></div>
+    <p class="mode-gate-sub">Creado por <strong>Hilary Suárez</strong></p>
+    <h2 class="mode-gate-title">¿Cómo querés explorar la biotecnología?</h2>
+    <p class="mode-gate-desc">Podés cambiar esto en cualquier momento.</p>
+    <div class="mode-gate-cards">
+      <button class="mode-card" onclick="setMode('explorer')">
+        <div class="mode-card-icon">🌱</div>
+        <h3>Soy nuevo/a</h3>
+        <p>Lenguaje claro, analogías y ejemplos del mundo real. Sin tecnicismos.</p>
+        <span class="mode-card-tag">Modo Explorador</span>
+      </button>
+      <button class="mode-card mode-card-sci" onclick="setMode('scientist')">
+        <div class="mode-card-icon">🔬</div>
+        <h3>Tengo base científica</h3>
+        <p>Lenguaje técnico, modelos científicos, referencias y papers.</p>
+        <span class="mode-card-tag">Modo Científico</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== NAVBAR ========== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Bio<span>Universe</span></a>
+    <div class="nav-links">
+      <a href="#que-es" class="nav-link">¿Qué es?</a>
+      <a href="#arcoiris" class="nav-link">Arcoíris</a>
+      <a href="#simulacion" class="nav-link">Simulación</a>
+      <a href="#hitos" class="nav-link">Hitos</a>
+      <a href="#blog" class="nav-link">Blog</a>
+      <a href="#ciencia" class="nav-link">Base Científica</a>
+    </div>
+    <div class="nav-right">
+      <button class="mode-toggle" id="modeToggle" onclick="toggleModeModal()">
+        <span id="modeLabel">🌱 Explorador</span>
+        <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      </button>
+      <button class="nav-cta" onclick="scrollTo('blog')">Blog →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mode switcher dropdown -->
+<div id="modeSwitcher" class="mode-switcher" style="display:none">
+  <button onclick="setMode('explorer')" class="ms-opt" id="ms-explorer">🌱 Modo Explorador — Soy nuevo/a</button>
+  <button onclick="setMode('scientist')" class="ms-opt" id="ms-scientist">🔬 Modo Científico — Tengo base</button>
+</div>
+
+<!-- ========== HERO ========== -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-kicker">🧬 Plataforma de divulgación científica</div>
+    <h1 class="hero-title">
+      La biotecnología está<br/>
+      <em>cambiando el mundo…</em>
+    </h1>
+    <p class="hero-sub mode-text"
+      data-explorer="y vos podés ser parte de eso. Explorá, entendé y viví la ciencia que salva vidas."
+      data-scientist="Explorá los fundamentos, aplicaciones clínicas y fronteras de la biotecnología moderna con rigor científico.">
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollTo('que-es')">Comenzar →</button>
+      <button class="btn-ghost" onclick="scrollTo('simulacion')">Probar simulación</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num" data-target="4200">0</span><span class="stat-unit">B USD</span><span class="stat-label">Mercado global</span></div>
+      <div class="stat"><span class="stat-num" data-target="500">0</span><span class="stat-unit">K+</span><span class="stat-label">Empleos en LATAM</span></div>
+      <div class="stat"><span class="stat-num" data-target="40">0</span><span class="stat-unit">%</span><span class="stat-label">Crecimiento anual</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><span>scroll</span></div>
+</section>
+
+<!-- ========== QUÉ ES ========== -->
+<section id="que-es">
+  <div class="container">
+    <div class="section-tag">// definición</div>
+    <h2 class="section-title">¿Qué es la <span>Biotecnología</span>?</h2>
+
+    <div class="def-hero-block">
+      <!-- EXPLORER MODE -->
+      <div class="mode-block explorer-block">
+        <p class="def-quote">"Es usar la vida — células, enzimas, ADN — como herramientas para resolver problemas humanos."</p>
+        <p class="def-body">Imaginate que tenés un problema de salud y la solución no está en un laboratorio de química, sino dentro de una célula viva. La biotecnología hace exactamente eso: programa organismos vivos para que hagan trabajo útil — curar enfermedades, producir alimentos, limpiar el ambiente.</p>
+        <div class="analogy-grid">
+          <div class="analogy-card">
+            <span>💻</span>
+            <p>Un programador escribe código para que la computadora resuelva problemas</p>
+          </div>
+          <div class="analogy-eq">≈</div>
+          <div class="analogy-card">
+            <span>🧬</span>
+            <p>Un biotecnólogo "escribe" en ADN para que las células resuelvan problemas</p>
+          </div>
+        </div>
+        <button class="level-up-btn" onclick="showLevel(this, 'que-es-sci')">Ver explicación científica →</button>
+      </div>
+
+      <!-- SCIENTIST MODE -->
+      <div class="mode-block scientist-block" id="que-es-sci" style="display:none">
+        <p class="def-quote sci-quote">"Disciplina que integra biología molecular, bioquímica e ingeniería para manipular sistemas vivos con fines aplicados."</p>
+        <p class="def-body">La biotecnología moderna se fundamenta en la biología molecular y la ingeniería genética. Mediante técnicas como la PCR, CRISPR-Cas9, clonación molecular y expresión heteróloga, es posible modificar el genoma de organismos modelo (E. coli, S. cerevisiae, CHO cells) para producir proteínas recombinantes, metabolitos secundarios o vectores terapéuticos.</p>
+        <div class="sci-ref-box">
+          <p class="sci-ref-label">📚 Referencia clave</p>
+          <p>Berg, J.M. et al. (2019). <em>Biochemistry</em>, 9th ed. — Capítulo 9: Recombinant DNA Technology. Freeman & Co.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- KNOWLEDGE LAYERS -->
+    <div class="knowledge-section">
+      <h3 class="ks-title">Explorá por niveles</h3>
+      <div class="levels-nav">
+        <button class="lvl-btn active" onclick="showKnowledgeLevel(1, this)">Nivel 1 — Básico</button>
+        <button class="lvl-btn" onclick="showKnowledgeLevel(2, this)">Nivel 2 — Intermedio</button>
+        <button class="lvl-btn" onclick="showKnowledgeLevel(3, this)">Nivel 3 — Avanzado</button>
+      </div>
+      <div class="level-content" id="level-1">
+        <div class="level-cards">
+          <div class="lc-card"><div class="lc-icon">🧬</div><h4>ADN</h4><p>Es el manual de instrucciones de todo ser vivo. Como el código fuente de un programa, pero para construir organismos.</p></div>
+          <div class="lc-card"><div class="lc-icon">⚙️</div><h4>Enzimas</h4><p>Son pequeñas máquinas de proteína que aceleran procesos dentro de las células. Sin ellas, la vida sería imposiblemente lenta.</p></div>
+          <div class="lc-card"><div class="lc-icon">🦠</div><h4>Células</h4><p>La unidad básica de la vida. Cada una contiene toda la información necesaria para funcionar de forma autónoma.</p></div>
+          <div class="lc-card"><div class="lc-icon">💊</div><h4>Bioterapias</h4><p>Medicamentos hechos desde organismos vivos. La insulina que usan millones de diabéticos hoy se produce así.</p></div>
+        </div>
+      </div>
+      <div class="level-content" id="level-2" style="display:none">
+        <div class="level-cards">
+          <div class="lc-card"><div class="lc-icon">✂️</div><h4>CRISPR</h4><p>Una herramienta molecular que permite editar el ADN con precisión quirúrgica. Funciona como "buscar y reemplazar" pero en el genoma de un organismo vivo.</p></div>
+          <div class="lc-card"><div class="lc-icon">🧪</div><h4>PCR</h4><p>Técnica que amplifica fragmentos de ADN. Permite detectar patógenos (como en los tests de COVID) y analizar muestras genéticas.</p></div>
+          <div class="lc-card"><div class="lc-icon">🔁</div><h4>Expresión génica</h4><p>El proceso por el que una célula lee el ADN y produce proteínas. Controlar este proceso es la base de la biotecnología moderna.</p></div>
+          <div class="lc-card"><div class="lc-icon">🌱</div><h4>OGMs</h4><p>Organismos Genéticamente Modificados. Plantas, bacterias o animales cuyo ADN fue alterado para agregar o eliminar características específicas.</p></div>
+        </div>
+      </div>
+      <div class="level-content" id="level-3" style="display:none">
+        <div class="level-cards">
+          <div class="lc-card"><div class="lc-icon">📐</div><h4>Cinética enzimática</h4><p>Modelo de Michaelis-Menten: v = (Vmax × [S]) / (Km + [S]). Describe la velocidad de reacción catalítica en función de la concentración del sustrato.</p></div>
+          <div class="lc-card"><div class="lc-icon">🧬</div><h4>Vectores de expresión</h4><p>Plásmidos o virus modificados que transportan genes de interés a células huésped. Incluyen promotores, terminadores y marcadores de selección.</p></div>
+          <div class="lc-card"><div class="lc-icon">🔬</div><h4>Secuenciación NGS</h4><p>Next-Generation Sequencing: plataformas como Illumina o Nanopore permiten secuenciar genomas completos en horas a bajo costo.</p></div>
+          <div class="lc-card"><div class="lc-icon">🤖</div><h4>Biología sintética</h4><p>Diseño de circuitos genéticos artificiales con lógica computacional aplicada a sistemas biológicos. Fundamentos: promotores inducibles, represores, toggle switches.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ARCOÍRIS ========== -->
+<section id="arcoiris">
+  <div class="container">
+    <div class="section-tag">// especializaciones</div>
+    <h2 class="section-title">El <span>Arcoíris</span> de la Biotecnología</h2>
+    <p class="section-sub">Toca cada color para descubrir ese mundo de posibilidades.</p>
+    <div class="rainbow-scene">
+      <div class="rainbow-wrapper">
+        <svg id="rainbowSvg" viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path class="arc-seg" data-idx="0" d="M 18,320 A 282,282 0 0,1 582,320" fill="none" stroke="#FF3B5C" stroke-width="40"/>
+          <path class="arc-seg" data-idx="1" d="M 58,320 A 242,242 0 0,1 542,320" fill="none" stroke="#FF7B37" stroke-width="40"/>
+          <path class="arc-seg" data-idx="2" d="M 98,320 A 202,202 0 0,1 502,320" fill="none" stroke="#FFD23F" stroke-width="40"/>
+          <path class="arc-seg" data-idx="3" d="M 138,320 A 162,162 0 0,1 462,320" fill="none" stroke="#2ECC71" stroke-width="40"/>
+          <path class="arc-seg" data-idx="4" d="M 178,320 A 122,122 0 0,1 422,320" fill="none" stroke="#2CB5E8" stroke-width="40"/>
+          <path class="arc-seg" data-idx="5" d="M 218,320 A 82,82 0 0,1 382,320" fill="none" stroke="#9B59B6" stroke-width="40"/>
+          <path class="arc-seg" data-idx="6" d="M 258,320 A 42,42 0 0,1 342,320" fill="none" stroke="#FF79A8" stroke-width="40"/>
+        </svg>
+        <div class="rainbow-legend">
+          <div class="rl-item" data-idx="0"><span class="rl-dot" style="background:#FF3B5C"></span>Roja</div>
+          <div class="rl-item" data-idx="1"><span class="rl-dot" style="background:#FF7B37"></span>Naranja</div>
+          <div class="rl-item" data-idx="2"><span class="rl-dot" style="background:#FFD23F"></span>Amarilla</div>
+          <div class="rl-item" data-idx="3"><span class="rl-dot" style="background:#2ECC71"></span>Verde</div>
+          <div class="rl-item" data-idx="4"><span class="rl-dot" style="background:#2CB5E8"></span>Azul</div>
+          <div class="rl-item" data-idx="5"><span class="rl-dot" style="background:#9B59B6"></span>Morada</div>
+          <div class="rl-item" data-idx="6"><span class="rl-dot" style="background:#FF79A8"></span>Rosa</div>
+        </div>
+      </div>
+      <div class="bio-info-panel" id="bioInfoPanel">
+        <div class="bio-panel-empty" id="bioPanelEmpty">
+          <div class="panel-pulse"><span>🧬</span></div>
+          <p>Tocá cualquier color del arcoíris</p>
+        </div>
+        <div class="bio-panel-content" id="bioPanelContent" style="display:none">
+          <div class="bpc-header">
+            <div class="bpc-dot" id="bpcDot"></div>
+            <div class="bpc-titles"><h3 id="bpcTitle"></h3><p id="bpcSubtitle" class="bpc-subtitle"></p></div>
+            <button class="bpc-close" onclick="closeBioPanel()">✕</button>
+          </div>
+          <div id="bpcExplorer" class="bpc-mode-block">
+            <p id="bpcDescExp" class="bpc-desc"></p>
+          </div>
+          <div id="bpcScientist" class="bpc-mode-block" style="display:none">
+            <p id="bpcDescSci" class="bpc-desc sci-text"></p>
+            <div class="sci-ref-box" id="bpcRef"></div>
+          </div>
+          <div class="bpc-section"><p class="bpc-label">🔬 Aplicaciones</p><div id="bpcApps" class="bpc-tags"></div></div>
+          <div class="bpc-section"><p class="bpc-label">💼 Salidas profesionales</p><div id="bpcCareers" class="bpc-careers-list"></div></div>
+          <div class="bpc-section"><p class="bpc-label">🌍 Impacto</p><p id="bpcImpact" class="bpc-impact-text"></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SIMULACIÓN ========== -->
+<section id="simulacion">
+  <div class="container">
+    <div class="section-tag">// experiencia interactiva</div>
+    <h2 class="section-title">Tomá decisiones como <span>científico/a</span></h2>
+    <p class="section-sub mode-text"
+      data-explorer="Un paciente necesita tratamiento. Vos elegís la biotecnología que lo puede ayudar."
+      data-scientist="Escenario clínico-biotecnológico: seleccioná la estrategia terapéutica óptima según el caso.">
+    </p>
+    <div class="sim-container" id="simContainer"></div>
+  </div>
+</section>
+
+<!-- ========== CONEXIÓN HUMANA ========== -->
+<section id="conexion">
+  <div class="conexion-inner">
+    <div class="conexion-bg"></div>
+    <div class="conexion-content">
+      <p class="conexion-overline">// el propósito</p>
+      <h2 class="conexion-title">"Detrás de cada experimento<br/><em>hay una vida que puede cambiar."</em></h2>
+      <p class="conexion-sub mode-text"
+        data-explorer="La biotecnología no es solo ciencia abstracta. Es la vacuna que protegió a tu familia, el diagnóstico que llegó a tiempo, el alimento que llegó donde no había."
+        data-scientist="Las aplicaciones biotecnológicas tienen impacto directo en morbimortalidad global: desde terapias génicas con eficacia superior al 80% en enfermedades monogénicas hasta biofármacos que han redefinido el estándar de cuidado oncológico.">
+      </p>
+      <div class="impact-numbers">
+        <div class="impact-num"><span>800M</span><p>Personas con acceso a insulina biotech</p></div>
+        <div class="impact-num"><span>13B</span><p>Dosis de vacunas ARNm administradas</p></div>
+        <div class="impact-num"><span>7000+</span><p>Enfermedades raras con potencial de tratamiento génico</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== POR QUÉ ESTUDIARLA ========== -->
+<section id="por-que">
+  <div class="container">
+    <div class="section-tag">// razones</div>
+    <h2 class="section-title">¿Por qué estudiar <span>Biotecnología</span>?</h2>
+    <div class="reasons-grid">
+      <div class="reason-card">
+        <div class="reason-num">01</div>
+        <h3>Entendés la vida</h3>
+        <p class="mode-text" data-explorer="Aprendés cómo funciona tu propio cuerpo, por qué enfermamos y cómo podemos sanar desde adentro." data-scientist="Comprensión mecanística de procesos celulares: señalización, regulación génica, homeostasis metabólica."></p>
+      </div>
+      <div class="reason-card">
+        <div class="reason-num">02</div>
+        <h3>Impacto real en salud</h3>
+        <p class="mode-text" data-explorer="Los biotecnólogos desarrollan vacunas, tratamientos para el cáncer y terapias que salvan vidas reales." data-scientist="Desarrollo de biofármacos, anticuerpos monoclonales, terapias CAR-T y vacunas de nueva generación con impacto clínico medible."></p>
+      </div>
+      <div class="reason-card">
+        <div class="reason-num">03</div>
+        <h3>Innovación sin límites</h3>
+        <p class="mode-text" data-explorer="Es una de las carreras con más crecimiento del siglo XXI. Las posibilidades de lo que podés crear son casi infinitas." data-scientist="Convergencia con IA, nanotecnología y computación cuántica abre nuevas fronteras: drug discovery computacional, órganos en chip, biología sintética."></p>
+      </div>
+      <div class="reason-card">
+        <div class="reason-num">04</div>
+        <h3>Aporte al planeta</h3>
+        <p class="mode-text" data-explorer="Desde biorremediación hasta alimentos sostenibles, la biotecnología puede ayudar a salvar el medio ambiente." data-scientist="Biorremediación de contaminantes, bioenergía de segunda generación y bioeconomía circular como pilares del desarrollo sostenible (ODS 13, 14, 15)."></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HITOS ========== -->
+<section id="hitos">
+  <div class="container">
+    <div class="section-tag">// historia</div>
+    <h2 class="section-title">Hitos que <span>cambiaron</span> el mundo</h2>
+    <div class="timeline">
+      <div class="timeline-item"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">1953</span><h3>Doble Hélice del ADN</h3><p class="mode-text" data-explorer="Watson y Crick descubren la forma del ADN. Por primera vez sabemos cómo se ve el manual de instrucciones de la vida." data-scientist="Watson & Crick describen la estructura B del ADN mediante cristalografía de rayos X. Modelo de doble hélice antiparalela con bases nitrogenadas complementarias (A-T, G-C)."></p><span class="tl-emoji">🧬</span></div></div>
+      <div class="timeline-item right"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">1973</span><h3>ADN Recombinante</h3><p class="mode-text" data-explorer="Por primera vez se toma un gen de un organismo y se pone en otro. Nace la idea de programar seres vivos." data-scientist="Cohen & Boyer demuestran transferencia génica heteróloga mediante plásmidos y enzimas de restricción. Fundamento de la ingeniería genética moderna."></p><span class="tl-emoji">🔬</span></div></div>
+      <div class="timeline-item"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">1982</span><h3>Insulina Biotech</h3><p class="mode-text" data-explorer="La primera medicina producida por bacterias modificadas llega a las personas. Millones de diabéticos cambian su calidad de vida." data-scientist="Humulin (Eli Lilly): insulina humana recombinante expresada en E. coli. Primera proteína terapéutica producida por ADN recombinante aprobada por FDA."></p><span class="tl-emoji">💉</span></div></div>
+      <div class="timeline-item right"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">2003</span><h3>Genoma Humano</h3><p class="mode-text" data-explorer="Completamos el mapa completo del ADN humano. Ahora tenemos el libro de instrucciones de la especie humana." data-scientist="HGP: 3.2 Gb secuenciados, ~20.000-25.000 genes codificantes. Catálogo de variantes genéticas base para medicina de precisión y farmacogenómica."></p><span class="tl-emoji">🗺️</span></div></div>
+      <div class="timeline-item"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">2012</span><h3>CRISPR-Cas9</h3><p class="mode-text" data-explorer="Una herramienta que permite editar genes como si fueran texto. Doudna y Charpentier ganan el Nobel de Química en 2020 por esto." data-scientist="Sistema CRISPR-Cas9 adaptado por Doudna & Charpentier para edición genómica programable. Eficiencia superior a ZFN y TALEN. Nobel de Química 2020."></p><span class="tl-emoji">✂️</span></div></div>
+      <div class="timeline-item right"><div class="tl-dot"></div><div class="tl-card"><span class="tl-year">2020</span><h3>Vacuna ARNm COVID-19</h3><p class="mode-text" data-explorer="En menos de un año se desarrolló una vacuna usando ARN mensajero. Una revolución que mostró el poder real de la biotecnología." data-scientist="BNT162b2 y mRNA-1273: vacunas basadas en ARNm encapsulado en nanopartículas lipídicas. Eficacia >94% en ensayos fase III. Plataforma adaptable a nuevas variantes."></p><span class="tl-emoji">💊</span></div></div>
+      <div class="timeline-item"><div class="tl-dot tl-dot-glow"></div><div class="tl-card tl-future"><span class="tl-year">Hoy →</span><h3>IA + Biología</h3><p class="mode-text" data-explorer="La inteligencia artificial y la biotecnología se unen. AlphaFold predice estructuras de proteínas. Tu generación escribirá los próximos hitos." data-scientist="AlphaFold2/3 (DeepMind): predicción de estructuras proteicas con precisión atómica. Integración de LLMs para diseño de proteínas de novo y drug discovery acelerado."></p><span class="tl-emoji">🤖</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BLOG ========== -->
+<section id="blog">
+  <div class="container">
+    <div class="section-tag">// artículos</div>
+    <h2 class="section-title">Blog <span>BioTech</span></h2>
+    <p class="section-sub">Contenido en dos niveles: divulgativo y técnico. Para todos.</p>
+
+    <!-- Admin gate -->
+    <div id="adminGate" class="modal-overlay" style="display:none">
+      <div class="modal-box admin-login">
+        <h3>🔐 Acceso — Hilary Suárez</h3>
+        <input type="password" id="adminPass" class="admin-input" placeholder="Contraseña..." onkeydown="if(event.key==='Enter')checkAdmin()"/>
+        <div class="admin-actions">
+          <button class="btn-primary" onclick="checkAdmin()">Entrar →</button>
+          <button class="btn-ghost" onclick="document.getElementById('adminGate').style.display='none'">Cancelar</button>
+        </div>
+        <p class="admin-hint">Solo la curadora puede publicar artículos.</p>
+      </div>
+    </div>
+
+    <!-- Admin panel -->
+    <div id="blogAdmin" style="display:none">
+      <div class="admin-panel">
+        <div class="admin-header">
+          <h3>✍️ Publicar artículo</h3>
+          <div class="curator-badge"><span class="curator-avatar-sm">HS</span>Hilary Suárez · Curadora</div>
+        </div>
+        <div id="pendingAlert" style="display:none" class="pending-alert">
+          <span id="pendingCount"></span> envíos pendientes — <button class="link-btn" onclick="openPendingModal()">Revisar →</button>
+        </div>
+        <input type="text" id="postTitle" class="admin-input" placeholder="Título..."/>
+        <div class="admin-row">
+          <select id="postTag" class="admin-input admin-select">
+            <option value="Divulgación">🌱 Divulgación</option>
+            <option value="CRISPR">✂️ CRISPR</option>
+            <option value="IA & Bio">🤖 IA & Bio</option>
+            <option value="Salud">❤️ Salud</option>
+            <option value="Ambiente">🌍 Ambiente</option>
+            <option value="Técnico">🔬 Técnico</option>
+          </select>
+          <select id="postLevel" class="admin-input admin-select">
+            <option value="1">Nivel 1 — Básico</option>
+            <option value="2">Nivel 2 — Intermedio</option>
+            <option value="3">Nivel 3 — Avanzado</option>
+          </select>
+        </div>
+        <textarea id="postContent" class="admin-textarea" placeholder="Contenido del artículo..."></textarea>
+        <div class="admin-actions">
+          <button class="btn-primary" onclick="publishPost()">Publicar →</button>
+          <button class="btn-ghost" onclick="document.getElementById('blogAdmin').style.display='none'">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-toolbar">
+      <div class="blog-filters">
+        <button class="filter-btn active" onclick="filterPosts('all',this)">Todos</button>
+        <button class="filter-btn" onclick="filterPosts('Divulgación',this)">🌱 Divulgación</button>
+        <button class="filter-btn" onclick="filterPosts('Técnico',this)">🔬 Técnico</button>
+        <button class="filter-btn" onclick="filterPosts('CRISPR',this)">CRISPR</button>
+        <button class="filter-btn" onclick="filterPosts('IA & Bio',this)">IA &amp; Bio</button>
+        <button class="filter-btn" onclick="filterPosts('Salud',this)">Salud</button>
+      </div>
+      <button class="btn-add" onclick="document.getElementById('adminGate').style.display='flex'">🔐 Curadora</button>
+    </div>
+    <div class="blog-grid" id="blogGrid"></div>
+  </div>
+</section>
+
+<!-- ========== BASE CIENTÍFICA ========== -->
+<section id="ciencia">
+  <div class="container">
+    <div class="section-tag">// respaldo científico</div>
+    <h2 class="section-title">Base <span>Científica</span></h2>
+    <p class="section-sub">Fundamentos teóricos, papers y referencias que respaldan este contenido.</p>
+    <div class="refs-grid">
+      <div class="ref-card"><div class="ref-type">📘 Textbook</div><h4>Molecular Biology of the Cell</h4><p>Alberts et al. (2022). 7th ed. Norton & Co. — Referencia fundamental en biología celular y molecular.</p></div>
+      <div class="ref-card"><div class="ref-type">📗 Textbook</div><h4>Biochemistry</h4><p>Berg, Tymoczko & Stryer (2019). 9th ed. Freeman. — Cinética enzimática, metabolismo y biología molecular.</p></div>
+      <div class="ref-card"><div class="ref-type">📄 Paper</div><h4>A Programmable Dual-RNA–Guided DNA Endonuclease</h4><p>Jinek et al. (2012). Science, 337(6096). — Artículo original de CRISPR-Cas9.</p><a href="https://doi.org/10.1126/science.1225829" target="_blank" class="ref-link">Ver paper →</a></div>
+      <div class="ref-card"><div class="ref-type">📄 Paper</div><h4>Highly Accurate Protein Structure Prediction</h4><p>Jumper et al. (2021). Nature, 596. — AlphaFold2 y su impacto en la biología estructural.</p><a href="https://doi.org/10.1038/s41586-021-03819-2" target="_blank" class="ref-link">Ver paper →</a></div>
+      <div class="ref-card"><div class="ref-type">📄 Paper</div><h4>Safety and Efficacy of BNT162b2 mRNA Covid-19 Vaccine</h4><p>Polack et al. (2020). NEJM, 383. — Ensayo clínico fase III de la vacuna ARNm.</p><a href="https://doi.org/10.1056/NEJMoa2034577" target="_blank" class="ref-link">Ver paper →</a></div>
+      <div class="ref-card"><div class="ref-type">🌐 Recurso</div><h4>NCBI / PubMed</h4><p>Base de datos de literatura científica biomédica. Más de 35 millones de publicaciones indexadas.</p><a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" class="ref-link">Explorar →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTRIBUIR ========== -->
+<section id="contribuir">
+  <div class="container">
+    <div class="section-tag">// comunidad</div>
+    <h2 class="section-title">¿Querés <span>contribuir</span>?</h2>
+    <p class="section-sub">Enviá tu artículo. Si la curadora lo aprueba, se publica con tu nombre.</p>
+    <div class="submit-layout">
+      <div class="submit-steps">
+        <div class="submit-step"><div class="step-num">01</div><div><h4>Escribí tu aporte</h4><p>Un resumen de estudio, una opinión o un descubrimiento que te haya sorprendido.</p></div></div>
+        <div class="submit-step"><div class="step-num">02</div><div><h4>Lo revisamos</h4><p>Hilary Suárez revisa cada envío para garantizar calidad y rigor.</p></div></div>
+        <div class="submit-step"><div class="step-num">03</div><div><h4>¡Tu nombre en el blog!</h4><p>Si es aprobado, aparece publicado con tu nombre como autor/a.</p></div></div>
+      </div>
+      <div class="submit-form">
+        <h3>Enviar artículo</h3>
+        <input type="text" id="subName" class="admin-input" placeholder="Tu nombre..."/>
+        <input type="text" id="subTitle" class="admin-input" placeholder="Título del artículo..."/>
+        <select id="subTag" class="admin-input admin-select">
+          <option value="Divulgación">🌱 Divulgación</option>
+          <option value="CRISPR">✂️ CRISPR</option>
+          <option value="IA & Bio">🤖 IA & Bio</option>
+          <option value="Salud">❤️ Salud</option>
+          <option value="Ambiente">🌍 Ambiente</option>
+          <option value="Técnico">🔬 Técnico</option>
+        </select>
+        <textarea id="subContent" class="admin-textarea" placeholder="Tu artículo aquí..."></textarea>
+        <button class="btn-primary" style="width:100%" onclick="submitArticle()">Enviar para revisión →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Bio<span>Universe</span></div>
+        <p>"La ciencia es para todos… solo hay que saber cómo explicarla."</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Explorar</h4>
+        <a href="#que-es">¿Qué es la Biotech?</a>
+        <a href="#arcoiris">Arcoíris Bio</a>
+        <a href="#simulacion">Simulación</a>
+        <a href="#hitos">Hitos históricos</a>
+      </div>
+      <div class="footer-links-col">
+        <h4>Contenido</h4>
+        <a href="#blog">Blog científico</a>
+        <a href="#ciencia">Base científica</a>
+        <a href="#contribuir">Contribuir</a>
+      </div>
+    </div>
+    <div class="footer-creator">
+      <div class="creator-card">
+        <div class="creator-avatar">HS</div>
+        <div>
+          <p class="creator-label">Creadora &amp; Curadora</p>
+          <p class="creator-name">Hilary Suárez</p>
+          <p class="creator-bio">Biotecnóloga · Divulgadora científica · Apasionada por la tecnología y la vida</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 BioUniverse · Creado por Hilary Suárez</p>
+      <button class="share-btn" onclick="copyLink()">📋 Compartir sitio</button>
+    </div>
+  </div>
+</footer>
+
+<!-- Pending modal -->
+<div id="pendingModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box"><div class="modal-header"><h3>📥 Envíos de la comunidad</h3><button class="bpc-close" onclick="document.getElementById('pendingModal').style.display='none'">✕</button></div><div id="pendingList"></div></div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

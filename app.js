@@ -1077,14 +1077,14 @@ function initCrisprLab() {
 }
 
 // ========== INTRO ==========
-// Scroll gently to CRISPR lab top — prevents mobile jump
+// Scroll gently to CRISPR lab top — only after user interaction
 function scrollToCrispr() {
+  if (!crisprState || crisprState.step === 'intro') return;
   const el = document.getElementById('crisprLab');
   if (!el) return;
-  // Only scroll if the lab is not already visible at top
   const rect = el.getBoundingClientRect();
   if (rect.top < -10 || rect.top > window.innerHeight * 0.4) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   }
 }
 
@@ -1127,7 +1127,6 @@ function renderCrisprIntro() {
         <button class="crispr-start-btn" onclick="startCrispr(0)">✅ Entendí, entrar al laboratorio →</button>
       </div>
     </div>`;
-  scrollToCrispr();
 }
 
 // ========== START — boot sequence ==========

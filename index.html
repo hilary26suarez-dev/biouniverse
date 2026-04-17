@@ -63,22 +63,24 @@
   <button onclick="setMode('scientist')" class="ms-opt" id="ms-scientist">🔬 Modo Científico — Tengo base</button>
 </div>
 
+<!-- PRESENTATION MODE BUTTON (only visible to Hilary) -->
+<button id="presentBtn" onclick="togglePresentMode()" title="Modo presentación">🎯</button>
+
 <!-- ========== HERO ========== -->
 <section id="hero">
   <canvas id="heroCanvas"></canvas>
   <div class="hero-content">
-    <div class="hero-kicker">🧬 Plataforma de divulgación científica</div>
+    <div class="hero-kicker">🧬 Plataforma de divulgación científica · por Hilary Suárez</div>
     <h1 class="hero-title">
-      La biotecnología está<br/>
-      <em>cambiando el mundo…</em>
+      <span id="typewriter"></span><span class="cursor">|</span>
     </h1>
     <p class="hero-sub mode-text"
       data-explorer="y vos podés ser parte de eso. Explorá, entendé y viví la ciencia que salva vidas."
       data-scientist="Explorá los fundamentos, aplicaciones clínicas y fronteras de la biotecnología moderna con rigor científico.">
     </p>
     <div class="hero-actions">
-      <button class="btn-primary" onclick="scrollTo('que-es')">Comenzar →</button>
-      <button class="btn-ghost" onclick="scrollTo('simulacion')">Probar simulación</button>
+      <button class="btn-primary" onclick="scrollTo('quiz')">¿Qué biotecnólogo/a sos? →</button>
+      <button class="btn-ghost" onclick="scrollTo('que-es')">Explorar la plataforma</button>
     </div>
     <div class="hero-stats">
       <div class="stat"><span class="stat-num" data-target="4200">0</span><span class="stat-unit">B USD</span><span class="stat-label">Mercado global</span></div>
@@ -86,7 +88,33 @@
       <div class="stat"><span class="stat-num" data-target="40">0</span><span class="stat-unit">%</span><span class="stat-label">Crecimiento anual</span></div>
     </div>
   </div>
+  <!-- LIVE IMPACT COUNTER -->
+  <div class="live-impact" id="liveImpact">
+    <div class="live-dot"></div>
+    <span id="liveText">Calculando impacto en tiempo real…</span>
+  </div>
   <div class="scroll-hint"><div class="scroll-line"></div><span>scroll</span></div>
+</section>
+
+<!-- ========== QUIZ DE PERSONALIDAD ========== -->
+<section id="quiz">
+  <div class="container">
+    <div class="section-tag">// descubrí tu perfil</div>
+    <h2 class="section-title">¿Qué <span>biotecnólogo/a</span> serías?</h2>
+    <p class="section-sub">5 preguntas. 30 segundos. Descubrí qué rama de la biotecnología va con tu forma de ver el mundo.</p>
+    <div class="quiz-container" id="quizContainer"></div>
+  </div>
+</section>
+
+<!-- ========== PROBLEMA → SOLUCIÓN ========== -->
+<section id="problemas">
+  <div class="container">
+    <div class="section-tag">// el mundo te necesita</div>
+    <h2 class="section-title">Elegí un <span>problema</span> que querés resolver</h2>
+    <p class="section-sub">La biotecnología ya está trabajando en todos estos desafíos. ¿Cuál te moviliza más?</p>
+    <div class="problems-grid" id="problemsGrid"></div>
+    <div class="problem-answer" id="problemAnswer" style="display:none"></div>
+  </div>
 </section>
 
 <!-- ========== QUÉ ES ========== -->

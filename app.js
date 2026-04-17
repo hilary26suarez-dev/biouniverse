@@ -620,3 +620,329 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPosts();
   initSim();
 });
+
+/* ============================================================
+   TYPEWRITER HERO
+   ============================================================ */
+const TYPEWRITER_PHRASES = [
+  'La biotecnología está\ncambiando el mundo…',
+  'La ciencia que\nprograma la vida.',
+  'Tu carrera puede\nsalvar millones.',
+  'El futuro es\nbiológico.'
+];
+
+function initTypewriter() {
+  const el = document.getElementById('typewriter');
+  if (!el) return;
+  let phraseIdx = 0, charIdx = 0, deleting = false;
+
+  function tick() {
+    const full = TYPEWRITER_PHRASES[phraseIdx];
+    const display = full.replace('\n', '<br/>');
+    const current = full.slice(0, charIdx);
+    el.innerHTML = current.replace('\n', '<br/>');
+
+    if (!deleting && charIdx === full.length) {
+      setTimeout(tick, phraseIdx === 0 ? 3000 : 2200);
+      deleting = true; return;
+    }
+    if (deleting && charIdx === 0) {
+      deleting = false;
+      phraseIdx = (phraseIdx + 1) % TYPEWRITER_PHRASES.length;
+      setTimeout(tick, 400); return;
+    }
+    charIdx += deleting ? -1 : 1;
+    setTimeout(tick, deleting ? 35 : 65);
+  }
+  tick();
+}
+
+/* ============================================================
+   LIVE IMPACT COUNTER
+   ============================================================ */
+function initLiveImpact() {
+  const el = document.getElementById('liveText');
+  if (!el) return;
+
+  // Approximate global rates per second
+  const RATES = [
+    { text: 'dosis de insulina biotech administradas', rate: 3.1 },
+    { text: 'secuencias de ADN analizadas en el mundo', rate: 47 },
+    { text: 'personas vacunadas con tecnología biotech', rate: 1.8 },
+    { text: 'tests moleculares procesados globalmente', rate: 12 },
+  ];
+
+  let idx = 0, count = 0, startTime = Date.now();
+
+  function update() {
+    const item = RATES[idx];
+    const elapsed = (Date.now() - startTime) / 1000;
+    count = Math.floor(elapsed * item.rate);
+    el.textContent = `+${count.toLocaleString()} ${item.text}`;
+    requestAnimationFrame(update);
+  }
+
+  // Cycle metric every 8 seconds
+  setInterval(() => {
+    idx = (idx + 1) % RATES.length;
+    count = 0; startTime = Date.now();
+  }, 8000);
+
+  update();
+}
+
+/* ============================================================
+   PRESENTATION MODE
+   ============================================================ */
+function togglePresentMode() {
+  document.body.classList.toggle('present-mode');
+  const btn = document.getElementById('presentBtn');
+  btn.title = document.body.classList.contains('present-mode')
+    ? 'Salir del modo presentación'
+    : 'Modo presentación';
+}
+
+/* ============================================================
+   QUIZ DE PERSONALIDAD BIOTECNOLÓGICA
+   ============================================================ */
+const QUIZ_QUESTIONS = [
+  {
+    q: 'Si pudieras resolver UN problema del mundo, ¿cuál sería?',
+    opts: [
+      { emoji: '❤️', text: 'Curar enfermedades que aún no tienen tratamiento', val: 'roja' },
+      { emoji: '🌍', text: 'Detener el cambio climático y salvar el planeta', val: 'gris' },
+      { emoji: '🍽️', text: 'Eliminar el hambre y la desnutrición global', val: 'verde' },
+      { emoji: '💻', text: 'Usar datos e IA para descubrir lo que aún no sabemos', val: 'morada' },
+    ]
+  },
+  {
+    q: 'En un proyecto de equipo, ¿cuál es tu rol natural?',
+    opts: [
+      { emoji: '🔬', text: 'El/la que experimenta y prueba ideas en el laboratorio', val: 'roja' },
+      { emoji: '📊', text: 'El/la que analiza los datos y encuentra patrones', val: 'morada' },
+      { emoji: '🌱', text: 'El/la que piensa en el impacto ambiental y social', val: 'verde' },
+      { emoji: '🎨', text: 'El/la que comunica y hace que todos entiendan', val: 'rosa' },
+    ]
+  },
+  {
+    q: '¿Qué noticia científica te haría saltar de emoción?',
+    opts: [
+      { emoji: '🧬', text: 'Se curó el primer paciente con una enfermedad genética usando CRISPR', val: 'roja' },
+      { emoji: '🥩', text: 'La carne cultivada es más barata que la animal', val: 'amarilla' },
+      { emoji: '🤖', text: 'Una IA diseñó una nueva proteína que no existe en la naturaleza', val: 'morada' },
+      { emoji: '🌊', text: 'Bacterias marinas limpian el plástico del océano en semanas', val: 'azul' },
+    ]
+  },
+  {
+    q: '¿Cómo te imaginás trabajando?',
+    opts: [
+      { emoji: '🏥', text: 'En hospitales o farmacéuticas, con impacto directo en pacientes', val: 'roja' },
+      { emoji: '🖥️', text: 'Frente a una computadora analizando datos genómicos', val: 'morada' },
+      { emoji: '🌿', text: 'Al aire libre o en invernaderos, trabajando con plantas y suelos', val: 'verde' },
+      { emoji: '⚖️', text: 'En política pública, definiendo el futuro ético de la ciencia', val: 'rosa' },
+    ]
+  },
+  {
+    q: 'Una frase que te representa:',
+    opts: [
+      { emoji: '💊', text: '"Quiero crear el medicamento que salve a alguien que nadie más pudo salvar"', val: 'roja' },
+      { emoji: '🔢', text: '"Los datos no mienten — en ellos está la respuesta"', val: 'morada' },
+      { emoji: '♻️', text: '"Si no cuidamos el planeta, no hay ciencia que valga"', val: 'gris' },
+      { emoji: '🗣️', text: '"La mejor ciencia es la que llega a todos, no solo a los laboratorios"', val: 'rosa' },
+    ]
+  }
+];
+
+const QUIZ_PROFILES = {
+  roja: {
+    emoji: '🔴', name: 'Biotecnólogo/a Rojo/a', color: '#FF3B5C',
+    badge: 'Medicina & Salud',
+    desc: 'Tu misión es salvar vidas desde el laboratorio. Sentís una conexión profunda con el impacto humano de la ciencia. Las terapias génicas, las vacunas y los medicamentos del futuro tienen tu firma. Sos el tipo de científico/a que trabaja pensando en la persona al otro lado del microscopio.',
+    careers: ['Investigador/a clínico', 'Desarrollo de vacunas', 'Terapia génica', 'Oncología molecular']
+  },
+  morada: {
+    emoji: '🟣', name: 'Biotecnólogo/a Morado/a', color: '#9B59B6',
+    badge: 'Bioinformática & IA',
+    desc: 'Sos el puente entre la programación y la biología. Donde otros ven datos, vos ves patrones que pueden cambiar la medicina. AlphaFold, drug discovery con IA, análisis de genomas — ese es tu mundo. Si te gusta programar, acabás de descubrir que podés hacer ciencia con código.',
+    careers: ['Bioinformático/a', 'Data Scientist bio', 'IA en pharma', 'Genómica computacional']
+  },
+  verde: {
+    emoji: '🟢', name: 'Biotecnólogo/a Verde', color: '#2ECC71',
+    badge: 'Agricultura & Sostenibilidad',
+    desc: 'El planeta te importa tanto como las personas. Querés usar la ciencia para alimentar al mundo de forma sostenible, crear cultivos resistentes y proteger los ecosistemas. Tu laboratorio puede ser un invernadero, un campo de cultivo o una biorrefinería. La vida depende literalmente de vos.',
+    careers: ['Mejoramiento genético', 'Biotecnología agrícola', 'Sostenibilidad', 'Seguridad alimentaria']
+  },
+  amarilla: {
+    emoji: '🟡', name: 'Biotecnólogo/a Amarillo/a', color: '#FFD23F',
+    badge: 'Alimentos & Fermentación',
+    desc: 'La revolución alimentaria del siglo XXI te tiene en el centro. Carne sin sacrificio animal, proteínas del futuro, fermentación de precisión — esto es para vos. Combinás ciencia con innovación para resolver uno de los mayores desafíos humanos: cómo alimentar a 10 mil millones de personas.',
+    careers: ['Foodtech', 'Ingeniería de fermentación', 'Proteínas alternativas', 'Startups de alimentos']
+  },
+  azul: {
+    emoji: '🔵', name: 'Biotecnólogo/a Azul', color: '#2CB5E8',
+    badge: 'Biotecnología Marina',
+    desc: 'El océano es tu laboratorio. Explorás la frontera menos conocida de la biotecnología — el 80% de los organismos marinos todavía no fueron estudiados para aplicaciones científicas. Podés descubrir el próximo antibiótico, el biocombustible del futuro o la solución a la contaminación marina.',
+    careers: ['Biología marina molecular', 'Bioprospeccion', 'Algas y biocombustibles', 'Bioremediación']
+  },
+  gris: {
+    emoji: '⚪', name: 'Biotecnólogo/a Gris/a', color: '#95A5A6',
+    badge: 'Ambiental & Bioeconomía',
+    desc: 'Tu ciencia limpia lo que otros contaminaron. Microorganismos que degradan plásticos, bacterias que restauran suelos tóxicos, sistemas biológicos que purifican el agua. La biotecnología gris es silenciosa pero esencial — sin ella, el planeta no tiene futuro.',
+    careers: ['Bioremediación', 'Gestión ambiental', 'Bioenergía', 'Economía circular']
+  },
+  rosa: {
+    emoji: '🩷', name: 'Biotecnólogo/a Rosa', color: '#FF79A8',
+    badge: 'Bioética & Divulgación',
+    desc: '¡Como Hilary! La ciencia más importante no es la que se hace en el laboratorio, sino la que llega a las personas. Vos querés ser el puente entre el conocimiento y el mundo. También podés ser quien define las reglas éticas de hasta dónde debe ir la biotecnología — una responsabilidad enorme.',
+    careers: ['Divulgación científica', 'Bioética', 'Regulación', 'Política científica']
+  }
+};
+
+let quizAnswers = [], quizStep = 0;
+
+function initQuiz() {
+  const c = document.getElementById('quizContainer');
+  if (!c) return;
+  c.innerHTML = `
+    <div class="quiz-start">
+      <div class="quiz-start-icon">🧬</div>
+      <h3>Descubrí tu perfil biotecnológico</h3>
+      <p>5 preguntas rápidas para descubrir qué rama de la biotecnología va con tu personalidad y tus valores. No hay respuestas correctas o incorrectas.</p>
+      <button class="btn-primary" onclick="startQuiz()">Empezar quiz →</button>
+    </div>`;
+}
+
+function startQuiz() {
+  quizAnswers = []; quizStep = 0;
+  renderQuizStep();
+}
+
+function renderQuizStep() {
+  if (quizStep >= QUIZ_QUESTIONS.length) { showQuizResult(); return; }
+  const q = QUIZ_QUESTIONS[quizStep];
+  const pct = (quizStep / QUIZ_QUESTIONS.length) * 100;
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="quiz-step">
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="quiz-q-num">Pregunta ${quizStep + 1} de ${QUIZ_QUESTIONS.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, i) => `
+          <button class="quiz-opt" onclick="answerQuiz('${opt.val}')">
+            <span class="quiz-opt-emoji">${opt.emoji}</span>
+            <span class="quiz-opt-text">${opt.text}</span>
+          </button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function answerQuiz(val) {
+  quizAnswers.push(val);
+  quizStep++;
+  renderQuizStep();
+}
+
+function showQuizResult() {
+  // Count most frequent answer
+  const freq = {};
+  quizAnswers.forEach(v => freq[v] = (freq[v] || 0) + 1);
+  const topVal = Object.keys(freq).sort((a, b) => freq[b] - freq[a])[0];
+  const profile = QUIZ_PROFILES[topVal] || QUIZ_PROFILES.roja;
+
+  document.getElementById('quizContainer').innerHTML = `
+    <div class="quiz-result">
+      <span class="result-profile-emoji">${profile.emoji}</span>
+      <span class="result-color-badge" style="background:${profile.color}22;color:${profile.color};border:1px solid ${profile.color}44">${profile.badge}</span>
+      <h2 class="result-name">${profile.name}</h2>
+      <p class="result-desc">${profile.desc}</p>
+      <div class="result-careers">
+        ${profile.careers.map(c => `<span class="result-career-tag">${c}</span>`).join('')}
+      </div>
+      <button class="btn-primary" onclick="scrollTo('arcoiris')">Explorá tu especialización →</button>
+      <button class="quiz-retry-btn" onclick="startQuiz()">Repetir quiz</button>
+    </div>`;
+}
+
+/* ============================================================
+   PROBLEMA → SOLUCIÓN
+   ============================================================ */
+const PROBLEMS = [
+  {
+    emoji: '🦠', title: 'Enfermedades sin cura', sub: 'Cáncer, Alzheimer, enfermedades raras',
+    biotech: 'Biotecnología Roja',
+    desc: 'La biotecnología está desarrollando terapias génicas con CRISPR que corrigen enfermedades hereditarias con una sola aplicación, vacunas personalizadas contra el cáncer basadas en el perfil genético de cada tumor, y anticuerpos diseñados para atacar células específicas sin dañar las sanas.',
+    examples: ['Terapia génica CRISPR', 'Vacunas ARNm anticáncer', 'Anticuerpos monoclonales', 'CAR-T cells']
+  },
+  {
+    emoji: '🌾', title: 'Hambre y desnutrición', sub: 'Seguridad alimentaria global',
+    biotech: 'Biotecnología Verde + Amarilla',
+    desc: 'Cultivos editados genéticamente para resistir sequías, plagas y suelos pobres. Proteínas alternativas producidas por fermentación de precisión que usan 95% menos tierra y agua. Arroz con vitamina A incorporada para prevenir ceguera en millones de niños.',
+    examples: ['Cultivos CRISPR tolerantes', 'Proteínas alternativas', 'Arroz Dorado', 'Biofertilizantes']
+  },
+  {
+    emoji: '🌡️', title: 'Cambio climático', sub: 'Emisiones y contaminación',
+    biotech: 'Biotecnología Gris + Negra',
+    desc: 'Microorganismos diseñados para degradar plásticos y derrames de petróleo. Biocombustibles de tercera generación producidos por algas. Bacterias que capturan CO₂. Biomateriales que reemplazan el plástico derivado del petróleo con alternativas 100% biodegradables.',
+    examples: ['Biodegradación de plásticos', 'Algas biocombustible', 'Captura de CO₂', 'Bioplásticos']
+  },
+  {
+    emoji: '🧠', title: 'Enfermedades mentales', sub: 'Depresión, esquizofrenia, autismo',
+    biotech: 'Biotecnología Roja + Morada',
+    desc: 'La bioinformática y la genómica están identificando los genes asociados a trastornos mentales. Se desarrollan biomarcadores para diagnóstico temprano y tratamientos personalizados según el perfil genético del paciente. La psilocibina y otros compuestos bioactivos están en ensayos clínicos para depresión resistente.',
+    examples: ['Genómica de salud mental', 'Biomarcadores cerebrales', 'Farmacogenómica', 'Terapias biológicas']
+  },
+  {
+    emoji: '🌊', title: 'Contaminación oceánica', sub: 'Microplásticos y derrames',
+    biotech: 'Biotecnología Azul + Gris',
+    desc: 'Bacterias marinas modificadas que detectan y degradan microplásticos. Algas que absorben metales pesados de las aguas costeras. Enzimas marinas (PETasas) que descomponen PET en sus componentes reciclables. Biofiltros basados en organismos marinos para tratamiento de aguas industriales.',
+    examples: ['Bacterias degradadoras de PET', 'Algas biofiltro', 'Bioremediación marina', 'PETasas marinas']
+  },
+  {
+    emoji: '👴', title: 'Envejecimiento', sub: 'Calidad de vida en la vejez',
+    biotech: 'Biotecnología Roja + Morada',
+    desc: 'La biotecnología del envejecimiento busca extender no solo la duración de la vida sino su calidad. Desde terapias senolíticas que eliminan células envejecidas, hasta edición genética de genes asociados a la longevidad, pasando por medicina regenerativa con células madre.',
+    examples: ['Terapias senolíticas', 'Medicina regenerativa', 'Células madre', 'Edición del genoma del envejecimiento']
+  }
+];
+
+let selectedProblem = null;
+
+function initProblems() {
+  const grid = document.getElementById('problemsGrid');
+  if (!grid) return;
+  grid.innerHTML = PROBLEMS.map((p, i) => `
+    <button class="problem-card" onclick="selectProblem(${i})" id="prob-${i}">
+      <span class="problem-emoji">${p.emoji}</span>
+      <div class="problem-title">${p.title}</div>
+      <div class="problem-sub">${p.sub}</div>
+    </button>`).join('');
+}
+
+function selectProblem(idx) {
+  const p = PROBLEMS[idx];
+  selectedProblem = idx;
+  document.querySelectorAll('.problem-card').forEach((c, i) => c.classList.toggle('selected', i === idx));
+  const ans = document.getElementById('problemAnswer');
+  ans.style.display = 'block';
+  ans.innerHTML = `
+    <div class="pa-header">
+      <span class="pa-emoji">${p.emoji}</span>
+      <div>
+        <div class="pa-title">${p.title}</div>
+        <div class="pa-sub">Solución: ${p.biotech}</div>
+      </div>
+    </div>
+    <p class="pa-desc">${p.desc}</p>
+    <div class="pa-examples">${p.examples.map(e => `<span class="pa-example">${e}</span>`).join('')}</div>`;
+  ans.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ============================================================
+   INIT ALL NEW FEATURES
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  initTypewriter();
+  initLiveImpact();
+  initQuiz();
+  initProblems();
+});

@@ -330,6 +330,7 @@ let simState = { step: 0, score: 0, answered: false, active: false };
 
 function initSim() {
   const container = document.getElementById('simContainer');
+  if (!container) return; // section replaced by CRISPR lab
   container.innerHTML = `
     <div class="sim-intro">
       <h3>🔬 Laboratorio de decisiones</h3>
@@ -613,7 +614,10 @@ window.addEventListener('scroll', () => {
 /* Utilities */
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
 function copyLink() { navigator.clipboard.writeText(window.location.href).then(() => showToast('📋 ¡Enlace copiado!')).catch(() => showToast('Copiá la URL manualmente')); }
-function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior:'smooth' }); }
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
 
 /* INIT */
 document.addEventListener('DOMContentLoaded', () => {
@@ -858,7 +862,7 @@ function showQuizResult() {
       <div class="result-careers">
         ${profile.careers.map(c => `<span class="result-career-tag">${c}</span>`).join('')}
       </div>
-      <button class="btn-primary" onclick="scrollTo('arcoiris')">Explorá tu especialización →</button>
+      <button class="btn-primary" onclick="scrollToSection('arcoiris')">Explorá tu especialización →</button>
       <button class="quiz-retry-btn" onclick="startQuiz()">Repetir quiz</button>
     </div>`;
 }

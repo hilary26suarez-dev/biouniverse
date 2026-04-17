@@ -965,14 +965,7 @@ body.present-mode { scroll-snap-type: y mandatory; }
    CRISPR BASE KEYBOARD + CUT SLOT
    =================================== */
 
-/* Arrow on mutant base */
-.base-arrow {
-  position: absolute; bottom: -18px; left: 50%;
-  transform: translateX(-50%);
-  font-size: .7rem; animation: bounce .7s ease infinite alternate;
-  pointer-events: none;
-}
-@keyframes bounce { from{transform:translateX(-50%) translateY(0)} to{transform:translateX(-50%) translateY(-4px)} }
+/* Arrow on mutant base — REMOVED */
 
 /* Cut slot — the gap where mutation was */
 .base-cut-slot {
@@ -1048,3 +1041,116 @@ body.present-mode { scroll-snap-type: y mandatory; }
 @keyframes wrongShake {
   0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
 }
+
+/* ===================================
+   CRISPR PRO — terminal, rules, score, before/after
+   =================================== */
+
+/* Rule pairs on intro */
+.crispr-rule-preview { display:flex; gap:2rem; justify-content:center; margin:1.5rem 0 1rem; }
+.rule-pair { display:flex; align-items:center; gap:.625rem; }
+.rule-base { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:900; font-family:'Courier New',monospace; }
+.rule-arrow { font-size:1.2rem; color:#3a5060; font-weight:700; }
+.rA { background:rgba(0,229,100,.15); color:#00e564; border:1px solid rgba(0,229,100,.3); }
+.rT { background:rgba(255,200,0,.12); color:#ffc800; border:1px solid rgba(255,200,0,.3); }
+.rC { background:rgba(0,180,255,.12); color:#00b4ff; border:1px solid rgba(0,180,255,.3); }
+.rG { background:rgba(200,80,255,.1); color:#c850ff; border:1px solid rgba(200,80,255,.25); }
+
+/* Rule mini inside step 3 keyboard */
+.base-kb-rule { display:flex; align-items:center; gap:.5rem; margin-bottom:1rem; font-size:.95rem; color:#3a5060; font-weight:700; }
+.rule-mini { width:28px; height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:.85rem; font-weight:900; font-family:'Courier New',monospace; }
+
+/* CAS9 Terminal */
+.cas9-terminal { background:#010a0f; border:1px solid rgba(0,229,255,.1); border-radius:var(--r-sm); overflow:hidden; }
+.terminal-header { display:flex; align-items:center; gap:.375rem; padding:.5rem .875rem; background:rgba(0,0,0,.3); border-bottom:1px solid rgba(0,229,255,.06); }
+.t-dot { width:10px; height:10px; border-radius:50%; }
+.t-dot.r { background:#ff5f57; } .t-dot.y { background:#febc2e; } .t-dot.g { background:#28c840; }
+.cas9-log-line { padding:.75rem 1rem; font-size:.8rem; color:#00e5ff; font-family:'Courier New',monospace; letter-spacing:.04em; min-height:40px; animation:fadeUp .3s ease; }
+.cas9-boot-label { font-size:.7rem; color:#00e5ff; font-family:'Courier New',monospace; animation:logBlink 1s step-end infinite; }
+@keyframes logBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* Base alive animation (subtle) */
+.base-alive { animation:baseFloat 3s ease infinite; }
+.base-alive:nth-child(odd) { animation-delay:.5s; }
+.base-alive:nth-child(3n) { animation-delay:1s; }
+@keyframes baseFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
+
+/* Hint button */
+.hint-btn { background:rgba(255,210,63,.07); border:1px solid rgba(255,210,63,.25); color:#ffd23f; padding:.45rem 1rem; border-radius:100px; font-size:.78rem; font-weight:700; cursor:pointer; font-family:var(--font-body); transition:all .2s; }
+.hint-btn:hover { background:rgba(255,210,63,.12); }
+.hint-box { background:rgba(255,210,63,.06); border:1px solid rgba(255,210,63,.2); border-radius:var(--r-xs); padding:.75rem 1rem; font-size:.85rem; color:#f0c040; line-height:1.65; margin-top:.75rem; animation:fadeUp .3s ease; }
+
+/* Hint glow on base after 2 hints */
+.base-hint-glow { box-shadow:0 0 0 3px rgba(255,210,63,.5) !important; border-color:rgba(255,210,63,.6) !important; }
+
+/* BEFORE vs AFTER */
+.before-after { display:flex; align-items:center; gap:1rem; margin:1.5rem auto; max-width:500px; }
+.ba-card { flex:1; border-radius:var(--r-sm); padding:1rem; text-align:center; }
+.ba-card.ba-before { background:rgba(255,60,60,.07); border:1px solid rgba(255,60,60,.2); }
+.ba-card.ba-after  { background:rgba(46,204,113,.07); border:1px solid rgba(46,204,113,.2); animation:baAppear .5s ease .3s both; }
+@keyframes baAppear { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+.ba-icon { font-size:1.75rem; margin-bottom:.375rem; }
+.ba-label { font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#4a6070; margin-bottom:.25rem; }
+.ba-name { font-size:.82rem; font-weight:700; margin-bottom:.25rem; }
+.ba-desc { font-size:.72rem; color:#7a9aaa; line-height:1.5; }
+.ba-arrow { font-size:1.5rem; color:#3a5060; flex-shrink:0; }
+
+/* SCORE BOARD */
+.score-board { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin:1.25rem 0; }
+.score-item { display:flex; flex-direction:column; align-items:center; gap:.2rem; background:var(--surface2); border:1px solid var(--border); border-radius:var(--r-sm); padding:.875rem 1.25rem; min-width:90px; }
+.score-icon { font-size:1.25rem; }
+.score-val { font-family:var(--font-display); font-size:1.3rem; font-weight:900; color:#fff; }
+.score-lbl { font-size:.68rem; color:#5a7080; text-transform:uppercase; letter-spacing:.08em; }
+
+/* RANK BADGE */
+.rank-badge { display:inline-block; padding:.5rem 1.5rem; border-radius:100px; border:2px solid; font-weight:800; font-size:.9rem; margin:.75rem 0 0; letter-spacing:.04em; }
+
+/* Details toggle */
+details summary::-webkit-details-marker { display:none; }
+
+/* Responsive */
+@media (max-width:500px) {
+  .before-after { flex-direction:column; }
+  .ba-arrow { transform:rotate(90deg); }
+  .crispr-rule-preview { gap:1.25rem; }
+}
+
+/* ===================================
+   RULE EXPLAINER — CRISPR intro
+   =================================== */
+.rule-explainer {
+  background: rgba(0,229,255,.04);
+  border: 1px solid rgba(0,229,255,.12);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+  text-align: left;
+}
+.rule-exp-title {
+  font-size: .72rem; font-weight: 800; color: #00e5ff;
+  letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+.rule-exp-desc {
+  font-size: .88rem; color: #9ab0ba;
+  line-height: 1.65; margin-bottom: 1.1rem;
+}
+.rule-exp-desc strong { color: #fff; }
+.rule-exp-pairs {
+  display: flex; flex-direction: column; gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+.rule-exp-pair {
+  display: flex; align-items: center; gap: .875rem;
+}
+.rule-exp-txt {
+  font-size: .82rem; color: #4a6070; font-weight: 600;
+}
+.rule-exp-example {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: var(--r-sm);
+  padding: .875rem 1rem;
+  font-size: .82rem; color: #7a9aaa; line-height: 1.8;
+}
+.rule-exp-example strong { color: #fff; }

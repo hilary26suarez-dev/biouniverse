@@ -465,7 +465,7 @@ function renderPosts() {
       </div>
       <div class="post-footer">
         <span class="post-read">Leer →</span>
-        <span class="post-author">por ${p.author || 'Hilary Suárez'}</span>
+        <span class="post-level-tag">${LEVEL_LABELS[p.level] || 'Nivel 1'}</span>
       </div>
     </article>
   `).join('');
@@ -633,12 +633,12 @@ const TYPEWRITER_PHRASES = [
 
 function initTypewriter() {
   const el = document.getElementById('typewriter');
+  const cursorEl = document.querySelector('.cursor');
   if (!el) return;
   let phraseIdx = 0, charIdx = 0, deleting = false;
 
   function tick() {
     const full = TYPEWRITER_PHRASES[phraseIdx];
-    const display = full.replace('\n', '<br/>');
     const current = full.slice(0, charIdx);
     el.innerHTML = current.replace('\n', '<br/>');
 
@@ -945,4 +945,322 @@ document.addEventListener('DOMContentLoaded', () => {
   initLiveImpact();
   initQuiz();
   initProblems();
+});
+
+/* ============================================================
+   CRISPR-Cas9 INTERACTIVE LAB
+   ============================================================ */
+
+const CRISPR_CASES = [
+  {
+    patient: { icon: '👦', name: 'Mateo, 8 años', condition: 'Anemia falciforme — una mutación en el gen HBB hace que sus glóbulos rojos tengan forma de hoz y bloqueen la circulación.' },
+    gene: 'HBB (Hemoglobina Beta)',
+    // Normal sequence — mutant position marked with *
+    normalSeq:  ['A','T','G','G','T','G','C','A','C','C','T','G','A','C','T'],
+    mutantSeq:  ['A','T','G','G','T','G','C','A','C','C','T','G','A','C','T'],
+    mutantPos: 11, // position 11 (T→A is the sickle cell mutation, we'll show visually)
+    mutantBase: 'A', // wrong base
+    correctBase: 'T', // right base
+    guideRNA: [null,null,null,null,null,null,null,'U','G','G','A','C',null,null,null],
+    step1: 'El gen HBB tiene una mutación en la posición 11: la letra <strong>T</strong> fue cambiada por una <strong>A</strong> errónea. ¡Encontrá la base mutada (brillando en rojo) y tocala!',
+    step2: 'Perfecto. Ahora el ARN guía (naranja) se alinea con el ADN y guía al Cas9 (✂️) hacia el lugar exacto. Presioná <strong>Lanzar Cas9</strong>.',
+    step3: '¡El Cas9 llegó! Está cortando la doble hélice en el punto de la mutación. Presioná <strong>Reparar ADN</strong> para insertar la secuencia correcta.',
+    successMsg: '¡Edición exitosa! La mutación fue corregida. Los glóbulos rojos de Mateo ahora pueden retomar su forma normal y transportar oxígeno correctamente.',
+    sciNote: 'En la realidad, CTX001 (exa-cel) usa exactamente este mecanismo. En ensayos clínicos fase III, el 97% de los pacientes con anemia falciforme quedaron libres de crisis dolorosas. FDA lo aprobó en diciembre 2023.'
+  },
+  {
+    patient: { icon: '👩', name: 'Elena, 34 años', condition: 'Distrofia muscular de Duchenne — una mutación en el gen DMD impide producir distrofina, proteína que protege los músculos.' },
+    gene: 'DMD (Distrofina)',
+    normalSeq: ['G','A','T','C','G','A','T','C','G','A','T','C','G','A','T'],
+    mutantSeq:  ['G','A','T','C','G','A','T','C','G','A','T','C','G','A','T'],
+    mutantPos: 7,
+    mutantBase: 'G',
+    correctBase: 'C',
+    guideRNA: [null,null,null,null,null,null,null,null,'G','U','A','G',null,null,null],
+    step1: 'El gen DMD tiene una mutación en posición 7: una <strong>C</strong> fue reemplazada por <strong>G</strong>. Buscá la base defectuosa (roja pulsante) y tocala.',
+    step2: 'Exacto. El ARN guía (naranja) se acopla al ADN. El Cas9 ya sabe a dónde ir. Presioná <strong>Lanzar Cas9</strong>.',
+    step3: 'El Cas9 cortó el ADN. Ahora se puede insertar la secuencia correcta. Presioná <strong>Reparar ADN</strong>.',
+    successMsg: '¡Corrección completada! El gen DMD ahora puede producir distrofina funcional. Los músculos de Elena tendrán protección estructural.',
+    sciNote: 'CRISPR para Duchenne está en ensayos fase I/II. La estrategia de "saltar exones" con CRISPR permite restaurar el marco de lectura y producir distrofina truncada pero funcional en ~13% de los pacientes con DMD.'
+  }
+];
+
+let crisprState = {
+  caseIdx: 0,
+  step: 0, // 0=intro, 1=find mutation, 2=launch cas9, 3=repair, 4=success
+  cas9Launched: false,
+  repairDone: false
+};
+
+function initCrisprLab() {
+  const el = document.getElementById('crisprLab');
+  if (!el) return;
+  renderCrisprIntro();
+}
+
+function renderCrisprIntro() {
+  const el = document.getElementById('crisprLab');
+  el.innerHTML = `
+    <div class="crispr-lab">
+      <div class="crispr-intro">
+        <div class="crispr-intro-visual">✂️</div>
+        <h3>Laboratorio CRISPR-Cas9</h3>
+        <p>Vas a editar ADN real de un paciente con enfermedad genética. Encontrá la mutación, guiá el Cas9 al lugar exacto y repará el gen. Vos sos el/la científico/a.</p>
+        <button class="crispr-start-btn" onclick="startCrispr(0)">🔬 Entrar al laboratorio →</button>
+      </div>
+    </div>`;
+}
+
+function startCrispr(caseIdx) {
+  crisprState = { caseIdx, step: 1, cas9Launched: false, repairDone: false };
+  renderCrisprStep();
+}
+
+// Countdown timer reference
+let crisprCountdown = null;
+
+function clearCrisprTimer() {
+  if (crisprCountdown) { clearInterval(crisprCountdown); crisprCountdown = null; }
+}
+
+function startCountdown(seconds, onExpire) {
+  clearCrisprTimer();
+  let remaining = seconds;
+  const update = () => {
+    const el = document.getElementById('crisprTimer');
+    if (!el) { clearCrisprTimer(); return; }
+    const pct = (remaining / seconds) * 100;
+    const color = remaining > 8 ? '#00e5ff' : remaining > 4 ? '#ffd23f' : '#ff3c3c';
+    el.innerHTML = `
+      <div class="timer-bar-wrap">
+        <div class="timer-bar" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span class="timer-num" style="color:${color}">${remaining}s</span>`;
+    if (remaining <= 0) { clearCrisprTimer(); onExpire(); }
+    remaining--;
+  };
+  update();
+  crisprCountdown = setInterval(update, 1000);
+}
+
+function renderCrisprStep() {
+  clearCrisprTimer();
+  const c = CRISPR_CASES[crisprState.caseIdx];
+  const el = document.getElementById('crisprLab');
+  const s = crisprState.step;
+
+  const stepsHTML = ['Encontrar mutación','Lanzar Cas9','Cortar y reparar','¡Curado!'].map((label, i) => {
+    const cls = i + 1 < s ? 'done' : i + 1 === s ? 'active' : '';
+    return `<div class="cstep ${cls}">${i + 1 < s ? '✓' : i + 1}. ${label}</div>`;
+  }).join('');
+
+  // DNA sequence
+  const seq = [...c.mutantSeq];
+  if (s >= 1) seq[c.mutantPos] = c.mutantBase;
+
+  const dnaHTML = seq.map((base, i) => {
+    let cls = `dna-base base-${base}`;
+    if (i === c.mutantPos && s === 1) cls += ' base-mutant base-clickable';
+    if (i === c.mutantPos && s === 2) cls += ' base-mutant';
+    if (i === c.mutantPos && s === 3) cls += ' base-cutting';
+    if (i === c.mutantPos && s >= 4) cls = `dna-base base-${c.correctBase} base-repaired`;
+    const click = (i === c.mutantPos && s === 1) ? `onclick="foundMutation()"` : '';
+    const display = (i === c.mutantPos && s >= 4) ? c.correctBase : base;
+    return `<div class="${cls}" ${click}>${display}</div>`;
+  }).join('');
+
+  // Guide RNA
+  let grnaHTML = '';
+  if (s >= 2) {
+    grnaHTML = `
+      <div class="dna-label" style="margin-top:1rem">ARN GUÍA (gRNA) — dirige el Cas9 al sitio exacto</div>
+      <div class="grna-row">${c.guideRNA.map(b =>
+        b ? `<div class="grna-base">${b}</div>` : `<div class="grna-spacer"></div>`
+      ).join('')}</div>`;
+  }
+
+  // Tension alert per step
+  const TENSION = {
+    1: {
+      icon: '⚠️',
+      label: 'ALERTA CRÍTICA',
+      msg: `El ADN de ${c.patient.name.split(',')[0]} se está replicando ahora mismo. <strong>Cada copia lleva la mutación.</strong> Si no la corregís, la proteína fallará y el daño celular continuará.`,
+      color: '#ff3c3c',
+      borderColor: 'rgba(255,60,60,.3)',
+      bg: 'rgba(255,60,60,.06)',
+      timer: true
+    },
+    2: {
+      icon: '🎯',
+      label: 'CAS9 LISTO',
+      msg: `El ARN guía está alineado. El Cas9 apunta al nucleótido <strong>posición ${c.mutantPos + 1}</strong>. Una vez que lo lances, cortará la doble hélice con precisión de un átomo. <strong>No hay marcha atrás.</strong>`,
+      color: '#ffd23f',
+      borderColor: 'rgba(255,210,63,.3)',
+      bg: 'rgba(255,210,63,.06)',
+      timer: false
+    },
+    3: {
+      icon: '✂️',
+      label: 'CORTE EN PROGRESO',
+      msg: `El Cas9 está haciendo el corte de doble cadena (DSB). La célula detectó el daño y activó su maquinaria de reparación. <strong>Tenés que insertar la secuencia correcta ahora,</strong> antes de que la célula cierre el corte con un error.`,
+      color: '#00e5ff',
+      borderColor: 'rgba(0,229,255,.3)',
+      bg: 'rgba(0,229,255,.06)',
+      timer: false
+    }
+  };
+
+  const t = TENSION[s];
+  const tensionHTML = t ? `
+    <div class="tension-alert" style="background:${t.bg};border-color:${t.borderColor}">
+      <div class="tension-header">
+        <span class="tension-icon">${t.icon}</span>
+        <span class="tension-label" style="color:${t.color}">${t.label}</span>
+        ${t.timer ? `<div id="crisprTimer" class="timer-wrap"></div>` : ''}
+      </div>
+      <p class="tension-msg">${t.msg}</p>
+    </div>` : '';
+
+  // Instruction
+  const instructions = [c.step1, c.step2, c.step3];
+  const instrHTML = s <= 3 ? `<div class="crispr-instruction">${instructions[s - 1]}</div>` : '';
+
+  // Controls
+  let controlsHTML = '';
+  if (s === 2) {
+    controlsHTML = `<div class="crispr-controls">
+      <button class="cc-btn cc-btn-primary" onclick="launchCas9()">✂️ Lanzar Cas9 →</button>
+    </div>`;
+  } else if (s === 3) {
+    controlsHTML = `<div class="crispr-controls">
+      <button class="cc-btn cc-btn-primary" onclick="repairDNA()">🔧 Insertar secuencia correcta →</button>
+    </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="crispr-lab">
+      <div class="crispr-patient-bar">
+        <div class="cpb-icon">${c.patient.icon}</div>
+        <div class="cpb-info">
+          <div class="cpb-name">${c.patient.name}</div>
+          <div class="cpb-condition">${c.patient.condition}</div>
+        </div>
+        <div class="cpb-status" id="patientStatus">⚠ EN TRATAMIENTO</div>
+      </div>
+      <div class="crispr-steps">${stepsHTML}</div>
+      <div class="crispr-body">
+        ${tensionHTML}
+        ${instrHTML}
+        <div class="dna-scene" id="dnaScene">
+          <div class="dna-label">GEN: ${c.gene} — SECUENCIA 5'→3'</div>
+          <div class="dna-strand-row" id="dnaRow">${dnaHTML}</div>
+          ${grnaHTML}
+          ${s >= 3 ? `<div class="cas9-robot" id="cas9El" style="left:2%">✂️</div>` : ''}
+        </div>
+        ${controlsHTML}
+        <div style="margin-top:.875rem">
+          <button class="cc-btn cc-btn-secondary" onclick="clearCrisprTimer();renderCrisprIntro()">← Salir del laboratorio</button>
+        </div>
+      </div>
+    </div>`;
+
+  // Start countdown on step 1
+  if (s === 1) {
+    setTimeout(() => {
+      const scene = document.getElementById('dnaScene');
+      if (scene) scene.classList.add('danger');
+    }, 50);
+    startCountdown(20, () => {
+      const timerEl = document.getElementById('crisprTimer');
+      if (timerEl) timerEl.innerHTML = `<span class="timer-num" style="color:#ff3c3c;animation:mutantPulse 1s infinite">⏰ ¡URGENTE!</span>`;
+      showToast('⏰ ¡El ADN ya replicó la mutación 3 veces! Encontrá la base mutada rápido.');
+    });
+  }
+
+  // Move Cas9 into position on step 3
+  if (s === 3) {
+    setTimeout(() => {
+      const cas9 = document.getElementById('cas9El');
+      if (cas9) cas9.style.left = `${(c.mutantPos / seq.length) * 82}%`;
+    }, 120);
+  }
+}
+
+function foundMutation() {
+  clearCrisprTimer();
+  crisprState.step = 2;
+  renderCrisprStep();
+  showToast('🎯 ¡Mutación encontrada! El ARN guía se alineó. Lanzá el Cas9.');
+}
+
+function launchCas9() {
+  crisprState.step = 3;
+  renderCrisprStep();
+  showToast('✂️ ¡Cas9 en camino! Esperá que llegue al sitio de corte.');
+  // After animation settles, enable repair
+}
+
+function repairDNA() {
+  // Animate repair then show success
+  const dnaRow = document.getElementById('dnaRow');
+  const c = CRISPR_CASES[crisprState.caseIdx];
+  if (dnaRow) {
+    const bases = dnaRow.querySelectorAll('.dna-base');
+    if (bases[c.mutantPos]) {
+      bases[c.mutantPos].className = `dna-base base-${c.correctBase} base-repaired`;
+      bases[c.mutantPos].textContent = c.correctBase;
+    }
+  }
+  setTimeout(() => {
+    crisprState.step = 4;
+    showSuccessScreen();
+  }, 900);
+}
+
+function showSuccessScreen() {
+  const c = CRISPR_CASES[crisprState.caseIdx];
+  const el = document.getElementById('crisprLab');
+
+  // Build corrected sequence visual
+  const correctedSeq = [...c.normalSeq];
+  const baseColors = { A:'rgba(0,229,100,.15)', T:'rgba(255,200,0,.1)', C:'rgba(0,180,255,.1)', G:'rgba(200,80,255,.1)' };
+  const textColors = { A:'#00e564', T:'#ffc800', C:'#00b4ff', G:'#c850ff' };
+
+  const seqHTML = correctedSeq.map((b, i) => `
+    <div class="success-base" style="background:${baseColors[b]};color:${textColors[b]};border:1px solid ${baseColors[b]};animation-delay:${i * 0.04}s">${b}</div>
+  `).join('');
+
+  el.innerHTML = `
+    <div class="crispr-lab">
+      <div class="crispr-patient-bar">
+        <div class="cpb-icon">${c.patient.icon}</div>
+        <div class="cpb-info">
+          <div class="cpb-name">${c.patient.name}</div>
+          <div class="cpb-condition">${c.patient.condition}</div>
+        </div>
+        <div class="cpb-status cured">✓ CURADO/A</div>
+      </div>
+      <div class="crispr-success">
+        <span class="success-emoji">🎉</span>
+        <h3>¡Edición genómica exitosa!</h3>
+        <p>${c.successMsg}</p>
+        <div class="success-dna-visual">${seqHTML}</div>
+        <div class="sci-note">
+          <div class="sci-note-label">📚 Dato científico real</div>
+          <p>${c.sciNote}</p>
+        </div>
+        <div style="display:flex;gap:.875rem;justify-content:center;flex-wrap:wrap">
+          ${crisprState.caseIdx < CRISPR_CASES.length - 1
+            ? `<button class="crispr-start-btn" onclick="startCrispr(${crisprState.caseIdx + 1})">Siguiente caso →</button>`
+            : `<button class="crispr-start-btn" onclick="startCrispr(0)">Repetir laboratorio 🔁</button>`
+          }
+          <button class="cc-btn cc-btn-secondary" onclick="renderCrisprIntro()" style="margin-top:0">Volver al inicio</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// Override DOMContentLoaded to add CRISPR init
+document.addEventListener('DOMContentLoaded', () => {
+  initCrisprLab();
 });

@@ -1088,9 +1088,16 @@ function scrollToCrispr() {
   }
 }
 
+// Freeze scroll during CRISPR re-render to prevent mobile jump
+function freezeScroll(fn) {
+  const y = window.scrollY;
+  fn();
+  requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, y)));
+}
+
 function renderCrisprIntro() {
   clearCrisprTimer();
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       <div class="crispr-intro">
         <div class="crispr-intro-visual">✂️</div>
@@ -1126,7 +1133,7 @@ function renderCrisprIntro() {
         <p style="font-size:.82rem;color:#7a9aaa;margin-bottom:1.75rem">Guardá esta regla — la vas a necesitar al elegir la base correcta.</p>
         <button class="crispr-start-btn" onclick="startCrispr(0)">✅ Entendí, entrar al laboratorio →</button>
       </div>
-    </div>`;
+    </div>`; });
 }
 
 // ========== START — boot sequence ==========
@@ -1136,7 +1143,7 @@ function startCrispr(idx) {
   SFX.scan();
 
   const c = CRISPR_CASES[idx];
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       ${patientBar(c, '<span class="cas9-boot-label">⚡ Iniciando sistema…</span>')}
       <div class="crispr-body">
@@ -1145,7 +1152,7 @@ function startCrispr(idx) {
           <div id="cas9Log" class="cas9-log-line">⬛ Sistema iniciando…</div>
         </div>
       </div>
-    </div>`;
+    </div>`; });
 
   animateCas9Log(CAS9_MSGS.boot, 'cas9Log', () => {
     SFX.lock();
@@ -1168,7 +1175,7 @@ function renderStep1() {
     >${base}</div>`;
   }).join('');
 
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       ${patientBar(c, '1 / 3 — Detectar mutación')}
       <div class="crispr-body">
@@ -1194,7 +1201,7 @@ function renderStep1() {
         </div>
         <div id="hintBox"></div>
       </div>
-    </div>`;
+    </div>`; });
 
   animateCas9Log(CAS9_MSGS.scan, 'cas9Log', null);
   SFX.scan();
@@ -1241,7 +1248,7 @@ function renderStep2() {
 
   const targetPct = Math.round((c.mutantPos / seq.length) * 78);
 
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       ${patientBar(c, '2 / 3 — Cas9 navegando')}
       <div class="crispr-body">
@@ -1266,7 +1273,7 @@ function renderStep2() {
         </div>
         <button class="cc-btn cc-btn-secondary" style="margin-top:.875rem" onclick="renderCrisprIntro()">← Salir</button>
       </div>
-    </div>`;
+    </div>`; });
 
   animateCas9Log(CAS9_MSGS.fly, 'cas9Log', null);
   SFX.scan();
@@ -1305,7 +1312,7 @@ function renderStep3() {
     return `<div class="dna-base base-${base}">${base}</div>`;
   }).join('');
 
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       ${patientBar(c, '3 / 3 — Insertar base correcta')}
       <div class="crispr-body">
@@ -1341,7 +1348,7 @@ function renderStep3() {
         <div id="baseFeedback"></div>
         <button class="cc-btn cc-btn-secondary" style="margin-top:1rem" onclick="renderCrisprIntro()">← Salir</button>
       </div>
-    </div>`;
+    </div>`; });
 
   animateCas9Log(CAS9_MSGS.cut, 'cas9Log', null);
 }
@@ -1397,7 +1404,7 @@ function showSuccessScreen() {
   const textColors  = { A:'#00e564', T:'#ffc800', C:'#00b4ff', G:'#c850ff' };
   const seqHTML = c.seq.map((b,i) => `<div class="success-base" style="background:${baseColors[b]};color:${textColors[b]};border:1px solid ${baseColors[b]};animation-delay:${i*.05}s">${b}</div>`).join('');
 
-  document.getElementById('crisprLab').innerHTML = `
+  freezeScroll(() => { document.getElementById('crisprLab').innerHTML = `
     <div class="crispr-lab">
       <div class="crispr-patient-bar">
         <div class="cpb-icon">${c.patient.icon}</div>
@@ -1454,7 +1461,7 @@ function showSuccessScreen() {
           <button class="cc-btn cc-btn-secondary" onclick="renderCrisprIntro()" style="margin-top:0">Volver al inicio</button>
         </div>
       </div>
-    </div>`;
+    </div>`; });
 }
 
 function patientBar(c, stepLabel) {

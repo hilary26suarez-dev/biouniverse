@@ -214,23 +214,18 @@ section { padding: 96px 1.5rem; }
 #rainbowSvg { width: 100%; max-width: 480px; cursor: pointer; }
 .arc-seg {
   stroke-linecap: butt;
-  transition: opacity .3s, filter .3s;
+  transition: opacity .3s;
   opacity: .92;
   cursor: pointer;
-  /* NEVER change stroke-width — causes gaps and movement */
 }
 .arc-seg:hover {
   opacity: 1;
-  filter: brightness(1.1);
 }
 .arc-seg.active {
   opacity: 1;
-  filter: url(#glow) brightness(1.2);
-  /* NO stroke-width change */
 }
 #rainbowSvg.has-active .arc-seg:not(.active) {
-  opacity: .5;
-  filter: none;
+  opacity: .45;
 }
 .rainbow-legend { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
 .rl-item { display: flex; align-items: center; gap: .375rem; font-size: .75rem; color: var(--text-muted); cursor: pointer; padding: .28rem .6rem; border-radius: 100px; border: 1px solid transparent; transition: all .2s; }

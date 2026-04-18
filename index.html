@@ -46,6 +46,7 @@
       <a href="#hitos" class="nav-link">Hitos</a>
       <a href="#blog" class="nav-link">Blog</a>
       <a href="#ciencia" class="nav-link">Base Científica</a>
+      <a href="#proyectos" class="nav-link">Proyectos</a>
     </div>
     <div class="nav-right">
       <button class="mode-toggle" id="modeToggle" onclick="toggleModeModal()">
@@ -197,17 +198,18 @@
     <p class="section-sub">Toca cada color para descubrir ese mundo de posibilidades.</p>
     <div class="rainbow-scene">
       <div class="rainbow-wrapper">
-        <svg id="rainbowSvg" viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg">
+        <svg id="rainbowSvg" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
-          <path class="arc-seg" data-idx="0" d="M 18,320 A 282,282 0 0,1 582,320" fill="none" stroke="#FF3B5C" stroke-width="40"/>
-          <path class="arc-seg" data-idx="1" d="M 58,320 A 242,242 0 0,1 542,320" fill="none" stroke="#FF7B37" stroke-width="40"/>
-          <path class="arc-seg" data-idx="2" d="M 98,320 A 202,202 0 0,1 502,320" fill="none" stroke="#FFD23F" stroke-width="40"/>
-          <path class="arc-seg" data-idx="3" d="M 138,320 A 162,162 0 0,1 462,320" fill="none" stroke="#2ECC71" stroke-width="40"/>
-          <path class="arc-seg" data-idx="4" d="M 178,320 A 122,122 0 0,1 422,320" fill="none" stroke="#2CB5E8" stroke-width="40"/>
-          <path class="arc-seg" data-idx="5" d="M 218,320 A 82,82 0 0,1 382,320" fill="none" stroke="#9B59B6" stroke-width="40"/>
-          <path class="arc-seg" data-idx="6" d="M 258,320 A 42,42 0 0,1 342,320" fill="none" stroke="#FF79A8" stroke-width="40"/>
+          <!-- stroke-width 44 overlaps the 40px gap — eliminates black lines between colors -->
+          <path class="arc-seg" data-idx="0" d="M 18,325 A 282,282 0 0,1 582,325" fill="none" stroke="#FF3B5C" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="1" d="M 58,325 A 242,242 0 0,1 542,325" fill="none" stroke="#FF7B37" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="2" d="M 98,325 A 202,202 0 0,1 502,325" fill="none" stroke="#FFD23F" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="3" d="M 138,325 A 162,162 0 0,1 462,325" fill="none" stroke="#2ECC71" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="4" d="M 178,325 A 122,122 0 0,1 422,325" fill="none" stroke="#2CB5E8" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="5" d="M 218,325 A 82,82 0 0,1 382,325" fill="none" stroke="#9B59B6" stroke-width="44" stroke-linecap="butt"/>
+          <path class="arc-seg" data-idx="6" d="M 258,325 A 42,42 0 0,1 342,325" fill="none" stroke="#FF79A8" stroke-width="44" stroke-linecap="butt"/>
         </svg>
         <div class="rainbow-legend">
           <div class="rl-item" data-idx="0"><span class="rl-dot" style="background:#FF3B5C"></span>Roja</div>
@@ -413,6 +415,54 @@
 </section>
 
 <!-- ========== CONTRIBUIR ========== -->
+
+<!-- ========== MIS PROYECTOS ========== -->
+<section id="proyectos">
+  <div class="container">
+    <div class="section-tag">// portafolio científico</div>
+    <h2 class="section-title">Más proyectos de <span>Hilary Suárez</span></h2>
+    <p class="section-sub">Herramientas científicas interactivas construidas con biotecnología aplicada.</p>
+    <div class="projects-grid">
+
+      <a href="https://hemotechsimuladorpro.netlify.app/" target="_blank" class="project-card">
+        <div class="project-glow" style="--pg:#e74c3c"></div>
+        <div class="project-icon">🫘</div>
+        <div class="project-tag">Bioquímica Clínica</div>
+        <h3>Simulador de Hemodiálisis</h3>
+        <p>Simulá una sesión dialítica completa con ecuaciones Daugirdas II. Ajustá flujos, membranas y observá el descenso de urea en tiempo real.</p>
+        <div class="project-techs">
+          <span>Kt/V</span><span>URR</span><span>Daugirdas II</span><span>KDOQI</span>
+        </div>
+        <div class="project-cta">Explorar →</div>
+      </a>
+
+      <a href="https://labenzimatico.netlify.app/" target="_blank" class="project-card">
+        <div class="project-glow" style="--pg:#f39c12"></div>
+        <div class="project-icon">⚗️</div>
+        <div class="project-tag">Bioquímica · Enzimología</div>
+        <h3>EnzyLab PRO</h3>
+        <p>Simulador de actividad enzimática con cinética Michaelis-Menten. Explorá temperatura, pH y concentración de sustrato con modelos matemáticos reales.</p>
+        <div class="project-techs">
+          <span>Michaelis-Menten</span><span>Catalasa</span><span>Cinética</span><span>Modelado</span>
+        </div>
+        <div class="project-cta">Explorar →</div>
+      </a>
+
+      <a href="https://apoyoalimenticiohemotech.netlify.app/" target="_blank" class="project-card">
+        <div class="project-glow" style="--pg:#2ecc71"></div>
+        <div class="project-icon">🧬</div>
+        <div class="project-tag">Nutrición Renal · Biotecnología</div>
+        <h3>Calculadora de Electrolitos</h3>
+        <p>Herramienta de apoyo alimenticio para pacientes renales. Calculá el impacto de electrolitos en tu dieta con base en principios de bioingeniería alimentaria.</p>
+        <div class="project-techs">
+          <span>Electrolitos</span><span>K⁺ · Na⁺ · P</span><span>Dieta renal</span><span>Hemotech</span>
+        </div>
+        <div class="project-cta">Explorar →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
 
 <!-- ========== FOOTER ========== -->
 <footer>

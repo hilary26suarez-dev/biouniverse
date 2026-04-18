@@ -212,9 +212,26 @@ section { padding: 96px 1.5rem; }
 .rainbow-scene { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; align-items: start; }
 .rainbow-wrapper { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
 #rainbowSvg { width: 100%; max-width: 480px; cursor: pointer; }
-.arc-seg { stroke-linecap: round; transition: opacity .2s, filter .2s, stroke-width .2s; opacity: .85; cursor: pointer; }
-.arc-seg:hover { opacity: 1; filter: url(#glow); }
-.arc-seg.active { opacity: 1; filter: url(#glow); stroke-width: 48 !important; }
+.arc-seg {
+  stroke-linecap: butt;
+  transition: opacity .25s, filter .25s;
+  opacity: .92;
+  cursor: pointer;
+}
+.arc-seg:hover {
+  opacity: 1;
+  filter: url(#glow);
+}
+/* Active: bright glow, others dim slightly — NO size change */
+.arc-seg.active {
+  opacity: 1;
+  filter: url(#glow) brightness(1.15);
+  stroke-width: 44 !important; /* keep original size */
+}
+/* When any arc is active, dim the others */
+#rainbowSvg.has-active .arc-seg:not(.active) {
+  opacity: .55;
+}
 .rainbow-legend { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
 .rl-item { display: flex; align-items: center; gap: .375rem; font-size: .75rem; color: var(--text-muted); cursor: pointer; padding: .28rem .6rem; border-radius: 100px; border: 1px solid transparent; transition: all .2s; }
 .rl-item:hover, .rl-item.active-legend { border-color: var(--border2); color: var(--text); background: var(--surface2); }
@@ -244,14 +261,14 @@ section { padding: 96px 1.5rem; }
 /* ===================================
    SIMULACIÓN
    =================================== */
-#simulacion { background: var(--surface); min-height: 100dvh; }
-.sim-container { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; height: 600px; min-height: 500px; }
+#simulacion { background: var(--surface); }
+.sim-container { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
 .sim-intro { padding: 2.5rem; text-align: center; }
 .sim-intro h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: .625rem; }
 .sim-intro p { color: var(--text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
 .sim-start-btn { background: var(--accent); color: #000; border: none; padding: .75rem 2rem; border-radius: 100px; font-weight: 700; font-size: .95rem; cursor: pointer; font-family: var(--font-body); transition: all .25s; }
 .sim-start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--accent-glow); }
-.sim-game { padding: 2rem; animation: fadeUp .4s ease; height: 100%; overflow-y: auto; min-height: 500px; }
+.sim-game { padding: 2rem; animation: fadeUp .4s ease; }
 .sim-progress { display: flex; gap: .3rem; margin-bottom: 1.75rem; }
 .sim-prog-dot { flex: 1; height: 3px; border-radius: 2px; background: var(--surface3); transition: background .3s; }
 .sim-prog-dot.done { background: var(--accent); }
@@ -466,8 +483,6 @@ footer { background: var(--surface); border-top: 1px solid var(--border); paddin
   .footer-top { grid-template-columns: 1fr; gap: 2rem; }
   section { padding: 72px 1.25rem; }
   .creator-card { border-radius: var(--r); }
-  .sim-options { grid-template-columns: 1fr; }
-  .sim-container { height: 80vh; }
 }
 @media (max-width: 480px) {
   .hero-actions { flex-direction: column; }
@@ -1205,4 +1220,95 @@ html { overflow-anchor: none; }
   /* Fix CRISPR base keyboard on mobile */
   .base-kb-btn { min-width: 60px; padding: .875rem .25rem; }
   .dna-base { width: 28px; height: 34px; font-size: .8rem; }
+}
+
+/* ===================================
+   MIS PROYECTOS — BANNER
+   =================================== */
+#proyectos { background: var(--surface); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  position: relative; overflow: hidden;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 2rem 1.75rem;
+  text-decoration: none; color: var(--text);
+  display: flex; flex-direction: column; gap: .875rem;
+  transition: all .3s;
+  cursor: pointer;
+}
+.project-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+}
+.project-card:hover .project-glow {
+  opacity: 1;
+}
+.project-card:hover .project-cta {
+  color: var(--accent);
+  gap: .625rem;
+}
+
+/* Colored glow per project */
+.project-glow {
+  position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, var(--pg) 0%, transparent 70%);
+  opacity: .08; transition: opacity .3s; pointer-events: none;
+}
+
+.project-icon { font-size: 2.25rem; }
+
+.project-tag {
+  font-size: .7rem; font-weight: 700;
+  color: var(--text-dim); letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.project-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 700;
+  line-height: 1.25; color: var(--text);
+}
+
+.project-card p {
+  font-size: .875rem; color: var(--text-muted);
+  line-height: 1.7; flex: 1;
+}
+
+.project-techs {
+  display: flex; flex-wrap: wrap; gap: .375rem;
+}
+.project-techs span {
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  padding: .18rem .6rem; border-radius: 100px;
+  font-size: .7rem; color: var(--text-dim);
+}
+
+.project-cta {
+  font-size: .82rem; font-weight: 700;
+  color: var(--text-muted);
+  display: flex; align-items: center; gap: .375rem;
+  transition: all .25s; margin-top: .25rem;
+}
+
+/* Color accent on hover per card */
+.project-card:nth-child(1):hover { border-color: rgba(231,76,60,.3); }
+.project-card:nth-child(1):hover .project-cta { color: #e74c3c; }
+.project-card:nth-child(2):hover { border-color: rgba(243,156,18,.3); }
+.project-card:nth-child(2):hover .project-cta { color: #f39c12; }
+.project-card:nth-child(3):hover { border-color: rgba(46,204,113,.3); }
+.project-card:nth-child(3):hover .project-cta { color: #2ecc71; }
+
+@media (max-width: 768px) {
+  .projects-grid { grid-template-columns: 1fr; }
 }

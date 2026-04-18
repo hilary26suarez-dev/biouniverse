@@ -217,6 +217,7 @@ segs.forEach(seg => {
     showBioPanel(idx);
     segs.forEach(s => s.classList.remove('active'));
     seg.classList.add('active');
+    document.getElementById('rainbowSvg')?.classList.add('has-active');
     rlItems.forEach(r => r.classList.toggle('active-legend', parseInt(r.dataset.idx) === idx));
   });
 });
@@ -228,6 +229,7 @@ rlItems.forEach(item => {
     showBioPanel(idx);
     segs.forEach(s => s.classList.remove('active'));
     segs[idx]?.classList.add('active');
+    document.getElementById('rainbowSvg')?.classList.add('has-active');
     rlItems.forEach(r => r.classList.toggle('active-legend', parseInt(r.dataset.idx) === idx));
   });
 });
@@ -262,6 +264,7 @@ function closeBioPanel() {
   document.getElementById('bioPanelEmpty').style.display = 'flex';
   document.getElementById('bioPanelContent').style.display = 'none';
   segs.forEach(s => s.classList.remove('active'));
+  document.getElementById('rainbowSvg')?.classList.remove('has-active');
   rlItems.forEach(r => r.classList.remove('active-legend'));
   activeBioIdx = null;
 }
@@ -1090,9 +1093,19 @@ function scrollToCrispr() {
 
 // Freeze scroll during CRISPR re-render to prevent mobile jump
 function freezeScroll(fn) {
+  const el = document.getElementById('crisprLab');
+  if (!el) { fn(); return; }
+  // Pin the container's current height so layout doesn't shift
+  const h = el.offsetHeight;
+  el.style.minHeight = h + 'px';
+  // Remember scroll position
   const y = window.scrollY;
+  // Run the render
   fn();
-  requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, y)));
+  // Restore scroll position synchronously — before browser repaints
+  window.scrollTo(0, y);
+  // Release height pin after browser settles
+  setTimeout(() => { el.style.minHeight = ''; }, 50);
 }
 
 function renderCrisprIntro() {

@@ -1319,3 +1319,22 @@ html { overflow-anchor: none; }
 * { overflow-anchor: none !important; }
 #crisprLab { overflow-anchor: none; contain: layout; }
 #simulacion { overflow-anchor: none; }
+
+/* ===================================
+   CRISPR SCROLL FIX — DEFINITIVO
+   =================================== */
+#crisprLab {
+  min-height: 520px;
+  overflow-anchor: none;
+  /* Transition for fade effect */
+  transition: opacity .12s ease;
+}
+/* Loading state */
+#crisprLab[style*="opacity: 0"] {
+  pointer-events: none;
+}
+/* Remove all overflow-anchor from dynamic containers */
+#blogGrid, #quizContainer, #problemsGrid,
+#problemAnswer, #bioPanelContent {
+  overflow-anchor: none;
+}

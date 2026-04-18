@@ -1092,28 +1092,28 @@ function scrollToCrispr() {
 }
 
 // Freeze scroll during CRISPR re-render to prevent mobile jump
+// ── SOLUCIÓN DEFINITIVA AL SCROLL ──────────────────────────
+// Estructura fija en HTML, solo actualizamos el contenido interno
+// con fade para que no haya salto de layout
 function freezeScroll(fn) {
-  // Nuclear approach: disable smooth scroll, save position, render, restore
-  const prevScrollBehavior = document.documentElement.style.scrollBehavior;
-  document.documentElement.style.scrollBehavior = 'auto';
-  document.documentElement.style.overflowAnchor = 'none';
+  const lab = document.getElementById('crisprLab');
+  if (!lab) { fn(); return; }
 
-  const y = window.pageYOffset || document.documentElement.scrollTop;
-
-  fn();
-
-  // Force scroll restore multiple times to beat any async browser behavior
-  document.documentElement.scrollTop = y;
-  document.body.scrollTop = y;
-  window.scrollTo(0, y);
+  // Fade out
+  lab.style.transition = 'opacity .12s ease';
+  lab.style.opacity = '0';
+  lab.style.pointerEvents = 'none';
 
   setTimeout(() => {
+    // Guardar scroll antes de cambiar contenido
+    const y = window.pageYOffset;
+    fn();
+    // Restaurar scroll inmediatamente
     window.scrollTo(0, y);
-    document.documentElement.style.scrollBehavior = prevScrollBehavior;
-  }, 0);
-
-  setTimeout(() => { window.scrollTo(0, y); }, 16);
-  setTimeout(() => { window.scrollTo(0, y); }, 32);
+    // Fade in
+    lab.style.opacity = '1';
+    lab.style.pointerEvents = '';
+  }, 130);
 }
 
 function renderCrisprIntro() {
